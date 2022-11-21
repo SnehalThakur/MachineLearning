@@ -1,5 +1,5 @@
 import sqlite3 as sql
-
+import re
 
 def createTableIfNotExist():
     sqlConnection = sql.connect(r"SQLiteDb\userData.db")
@@ -17,14 +17,6 @@ def createTableIfNotExist():
 # cursor = sqlConnection.execute("""SELECT name FROM sqlite_master WHERE type='table';""")
 # print(cursor.fetchall())
 
-
-# CompanyID = input("Please enter company id")
-# CompanyName = input("Please enter company name")
-# CEO = input("Please enter company CEO")
-# Address = input("Please enter company address")
-# Country = input("Please enter company country")
-
-
 def insertUser(username, password):
     con = sql.connect("SQLiteDb\\userData.db")
     cur = con.cursor()
@@ -37,6 +29,36 @@ def retrieveUsers():
     con = sql.connect("SQLiteDb\\userData.db")
     cur = con.cursor()
     cur.execute("SELECT username, password FROM users")
+    users = cur.fetchall()
+    con.close()
+    return users
+
+
+def registerUsers(username, email, password):
+    con = sql.connect("SQLiteDb\\userData.db")
+    cursor = con.cursor()
+    cursor.execute('SELECT * FROM accounts WHERE username = % s', (username,))
+    account = cursor.fetchone()
+    if account:
+        msg = 'Account already exists !'
+    elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+        msg = 'Invalid email address !'
+    elif not re.match(r'[A-Za-z0-9]+', username):
+        msg = 'Username must contain only characters and numbers !'
+    elif not username or not password or not email:
+        msg = 'Please fill out the form !'
+    else:
+        cursor.execute('INSERT INTO accounts VALUES (NULL, % s, % s, % s)', (username, password, email,))
+        con.commit()
+        con.close()
+        msg = 'You have successfully registered !'
+    return msg
+
+
+def retrieveUsersWithUsername(username):
+    con = sql.connect("SQLiteDb\\userData.db")
+    cur = con.cursor()
+    cur.execute("SELECT * FROM users WHERE username = % s', (username)")
     users = cur.fetchall()
     con.close()
     return users
