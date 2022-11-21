@@ -20,13 +20,30 @@ def home():
 
 
 @app.route("/user")
-def products():
+def users():
     return dbHandler.retrieveUsers()
+
+@app.route("/register", methods=['POST', 'GET'])
+def registerUsers():
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        password = request.form['password']
+    return dbHandler.registerUsers(username, email, password)
+
+
+@app.route("/userWithUsername", methods=['POST', 'GET'])
+def userWithUsername():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+    return dbHandler.retrieveUsersWithUsername(username)
 
 
 @app.route("/order/<orderID>")
 def order(orderID):
     return 'This is the Order page with {}'.format(orderID)
+
 
 if __name__ == '__main__':
     app.run(debug=False, host='0.0.0.0')
