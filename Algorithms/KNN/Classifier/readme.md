@@ -20,6 +20,6 @@ Step-5: Assign the new data points to that category for which the number of the 
 Step-6: Our model is ready.
 
 
-K-Nearest Neighbor(KNN) Machine Learning Usecase
+**K-Nearest Neighbor(KNN) Machine Learning Usecase**
 - Check users who are interested in buying SUV Car or not.
 
